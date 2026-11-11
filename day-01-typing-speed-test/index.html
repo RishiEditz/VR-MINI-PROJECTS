@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Speed Test</title>
+  <meta name="description" content="A small typing speed test that shows your words per minute, accuracy and time.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <p class="app__kicker">Exploring Mini Projects &middot; Day 1</p>
+      <h1 class="app__title">Typing Speed Test</h1>
+      <p class="app__hint">Type the passage below. The timer starts with your first key.</p>
+    </header>
+
+    <section class="stats" aria-label="Live stats">
+      <div class="stat">
+        <span class="stat__label">WPM</span>
+        <span class="stat__value" id="wpm">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat__label">Accuracy</span>
+        <span class="stat__value" id="accuracy">100%</span>
+      </div>
+      <div class="stat">
+        <span class="stat__label">Time</span>
+        <span class="stat__value" id="time">0.0s</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <p class="passage" id="passage" aria-label="Passage to type"></p>
+      <input
+        id="typing-input"
+        class="typing-input"
+        type="text"
+        autocomplete="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-label="Type the passage here"
+        placeholder="Start typing here..."
+      >
+      <div class="progress" aria-hidden="true">
+        <div class="progress__bar" id="progress-bar"></div>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <h2 class="result__title">Finished!</h2>
+      <p class="result__verdict" id="verdict"></p>
+      <div class="result__grid">
+        <div class="result__item">
+          <span class="result__num" id="final-wpm">0</span>
+          <span class="result__label">WPM</span>
+        </div>
+        <div class="result__item">
+          <span class="result__num" id="final-acc">0%</span>
+          <span class="result__label">Accuracy</span>
+        </div>
+        <div class="result__item">
+          <span class="result__num" id="final-time">0s</span>
+          <span class="result__label">Time</span>
+        </div>
+      </div>
+    </section>
+
+    <button class="btn" id="restart-btn" type="button">New passage</button>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
