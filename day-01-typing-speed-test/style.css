@@ -1,17 +1,21 @@
-/* Typing Speed Test - warm charcoal with lime and orange accents (series theme).
+/* Typing Speed Test - Sunrise gradient (Exploring Mini Projects, series theme).
+   Amber to hot pink to coral gradients on the page, near-black ink cards for text contrast.
    Sizes are fluid: the root font grows from 16px on phones to 26px on large TVs,
    and every other size is in rem, clamp() or grid/flex, so nothing is a fixed pixel width. */
 
 :root {
-  --bg: #1d1b19;
-  --panel: #2a2622;
-  --panel-edge: #3d3731;
-  --field: #171513;
-  --text: #f4eee4;
-  --muted: #a89d90;
-  --lime: #c5f545;
-  --orange: #ff7a2f;
-  --ink: #1d1b19;
+  --sun-a: #ffb23f;
+  --sun-b: #ff5c8a;
+  --sun-c: #ff7a59;
+  --grad: linear-gradient(120deg, var(--sun-a) 0%, var(--sun-b) 55%, var(--sun-c) 100%);
+  --grad-soft: linear-gradient(120deg, rgba(255, 178, 63, 0.35), rgba(255, 92, 138, 0.35));
+  --ink: #1b0a12;
+  --panel: #241019;
+  --panel-edge: rgba(255, 214, 190, 0.18);
+  --field: #15070f;
+  --text: #fff7f2;
+  --muted: #f3c4b2;
+  --hi: #ffd27a;
   --radius: 1.1rem;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --font: "Liberation Sans", Arial, Helvetica, sans-serif;
@@ -22,6 +26,11 @@ html {
   font-size: clamp(16px, 0.6vw + 10px, 26px);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  min-height: 100%;
+  background-color: var(--sun-c);
+  background-image:
+    linear-gradient(160deg, var(--sun-a) 0%, var(--sun-b) 52%, var(--sun-c) 100%);
+  background-attachment: fixed;
 }
 
 * { box-sizing: border-box; }
@@ -32,8 +41,9 @@ body {
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;
-  background-color: var(--bg);
-  background-image: radial-gradient(circle at 50% -10%, #3a332c 0%, var(--bg) 60%);
+  background-image:
+    radial-gradient(90% 55% at 8% 0%, rgba(255, 244, 205, 0.8) 0%, rgba(255, 244, 205, 0) 70%),
+    radial-gradient(80% 60% at 100% 100%, rgba(255, 122, 89, 0.9) 0%, rgba(255, 122, 89, 0) 70%);
   background-repeat: no-repeat;
   color: var(--text);
   font-family: var(--font);
@@ -50,12 +60,16 @@ body {
   gap: 1.1rem;
 }
 
-/* Header */
+/* Header (sits on the gradient, so the text is near-black) */
 .app__header { text-align: center; }
 
 .app__kicker {
-  margin: 0 0 0.4rem;
-  color: var(--orange);
+  display: inline-block;
+  margin: 0 0 0.6rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--hi);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -64,6 +78,7 @@ body {
 
 .app__title {
   margin: 0;
+  color: var(--ink);
   font-size: clamp(1.9rem, 1.3rem + 3vw, 3.4rem);
   line-height: 1.1;
   font-weight: 700;
@@ -72,8 +87,9 @@ body {
 .app__hint {
   margin: 0.6rem auto 0;
   max-width: 40rem;
-  color: var(--muted);
+  color: #3a1420;
   font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.2rem);
+  font-weight: 700;
 }
 
 /* Two columns from a laptop width up, one column on phone and tablet */
@@ -105,6 +121,7 @@ body {
   border: 1px solid var(--panel-edge);
   border-radius: var(--radius);
   padding: clamp(1rem, 0.8rem + 1vw, 1.6rem);
+  box-shadow: 0 18px 40px rgba(70, 12, 36, 0.28);
 }
 
 /* Setup */
@@ -148,8 +165,9 @@ body {
 }
 
 .seg__btn[aria-pressed="true"] {
-  background: var(--lime);
+  background: var(--grad);
   color: var(--ink);
+  box-shadow: 0 4px 14px rgba(255, 92, 138, 0.35);
 }
 
 .own {
@@ -183,13 +201,13 @@ body {
 }
 
 .own__msg {
-  color: var(--orange);
+  color: var(--sun-b);
   font-weight: 700;
 }
 
-.own__msg--ok { color: var(--lime); }
+.own__msg--ok { color: var(--hi); }
 
-/* Buttons (44px and up for touch) */
+/* Buttons (44px and up for touch): gradient pill with near-black text */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -200,9 +218,10 @@ body {
   padding: 0.7rem 1.6rem;
   border: 2px solid transparent;
   border-radius: 999px;
-  background: var(--lime);
+  background: var(--grad);
   color: var(--ink);
   font: 700 1rem/1 var(--font);
+  box-shadow: 0 8px 22px rgba(255, 92, 138, 0.35);
   cursor: pointer;
   touch-action: manipulation;
   transition: transform 200ms var(--ease), filter 200ms var(--ease), border-color 200ms var(--ease), color 200ms var(--ease);
@@ -210,8 +229,9 @@ body {
 
 .btn--ghost {
   background: transparent;
+  box-shadow: none;
   color: var(--text);
-  border-color: var(--muted);
+  border-color: rgba(255, 247, 242, 0.55);
 }
 
 .btn:active { transform: scale(0.97); }
@@ -227,20 +247,21 @@ body {
 .typing-input:focus-visible,
 .own__text:focus-visible,
 .runs:focus-visible {
-  outline: 3px solid var(--orange);
+  outline: 3px solid var(--text);
   outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--ink);
 }
 
 @media (hover: hover) {
-  .btn:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn:hover:not(:disabled) { filter: brightness(1.07) saturate(1.1); }
   .btn--ghost:hover:not(:disabled) {
-    border-color: var(--lime);
-    color: var(--lime);
+    border-color: var(--hi);
+    color: var(--hi);
     filter: none;
   }
 }
 
-/* Live stats */
+/* Live stats (gradient numbers) */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -254,6 +275,7 @@ body {
   border: 1px solid var(--panel-edge);
   border-radius: var(--radius);
   text-align: center;
+  box-shadow: 0 18px 40px rgba(70, 12, 36, 0.28);
 }
 
 .stat__label {
@@ -268,10 +290,20 @@ body {
 .stat__value {
   display: block;
   margin-top: 0.2rem;
-  color: var(--lime);
+  color: var(--hi);
   font-size: clamp(1.6rem, 1.2rem + 2vw, 3rem);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .stat__value,
+  .result__num {
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 /* Test card */
@@ -307,16 +339,17 @@ body {
 }
 
 .char { transition: color 120ms var(--ease); }
-.char--ok { color: var(--lime); }
+.char--ok { color: var(--hi); }
 .char--bad {
-  color: var(--orange);
+  color: var(--sun-b);
   text-decoration: underline;
   text-decoration-thickness: 2px;
 }
 .char--next {
   color: var(--text);
-  background: rgba(197, 245, 69, 0.18);
+  background: var(--grad-soft);
   border-radius: 4px;
+  box-shadow: inset 0 -2px 0 var(--sun-b);
 }
 
 .typing-input {
@@ -334,8 +367,8 @@ body {
 
 .typing-input:focus {
   outline: none;
-  border-color: var(--lime);
-  box-shadow: 0 0 0 4px rgba(197, 245, 69, 0.15);
+  border-color: var(--sun-b);
+  box-shadow: 0 0 0 4px rgba(255, 92, 138, 0.25);
 }
 
 .typing-input:disabled { opacity: 0.6; }
@@ -351,7 +384,7 @@ body {
   height: 100%;
   width: 0%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--orange), var(--lime));
+  background: var(--grad);
   transition: width 150ms var(--ease);
 }
 
@@ -360,17 +393,19 @@ body {
   justify-content: center;
 }
 
-/* Result card */
+/* Result card: gradient border on a dark card */
 .result {
-  background: linear-gradient(160deg, #35302a, var(--panel));
-  border: 2px solid var(--lime);
+  background:
+    linear-gradient(var(--panel), var(--panel)) padding-box,
+    var(--grad) border-box;
+  border: 2px solid transparent;
   text-align: center;
   animation: pop 420ms var(--ease) both;
 }
 
 .result__title {
   margin: 0;
-  color: var(--lime);
+  color: var(--hi);
   font-size: clamp(1.5rem, 1.2rem + 1vw, 2.2rem);
 }
 
@@ -387,7 +422,7 @@ body {
 
 .result__num {
   display: block;
-  color: var(--orange);
+  color: var(--sun-b);
   font-size: clamp(2rem, 1.6rem + 2vw, 3.4rem);
   font-weight: 700;
   line-height: 1.1;
@@ -405,7 +440,7 @@ body {
 
 .result__best {
   margin: 1rem 0 0;
-  color: var(--lime);
+  color: var(--hi);
   font-weight: 700;
 }
 
@@ -437,7 +472,7 @@ body {
   font-size: 0.95rem;
 }
 
-.history__best strong { color: var(--lime); }
+.history__best strong { color: var(--hi); }
 
 .history__note {
   margin: 0;
@@ -461,12 +496,12 @@ body {
   max-width: 2.4rem;
   min-height: 4px;
   border-radius: 0.3rem 0.3rem 0 0;
-  background: var(--lime);
-  opacity: 0.85;
+  background: linear-gradient(180deg, var(--sun-b), #b8345f);
+  opacity: 0.9;
 }
 
 .chart__bar--latest {
-  background: var(--orange);
+  background: var(--grad);
   opacity: 1;
 }
 
@@ -497,7 +532,7 @@ body {
 }
 
 .run__wpm {
-  color: var(--orange);
+  color: var(--hi);
   font-size: 1.5rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
