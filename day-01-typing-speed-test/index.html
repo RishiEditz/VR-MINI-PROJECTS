@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typing Speed Test</title>
-  <meta name="description" content="A small typing speed test that shows your words per minute, accuracy and time.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Typing Speed Test | Exploring Mini Projects, Day 1</title>
+  <meta name="description" content="A small typing speed test with random text or your own paragraph, live WPM and accuracy, a personal best and a run history.">
+  <meta name="theme-color" content="#1d1b19">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,61 +13,129 @@
     <header class="app__header">
       <p class="app__kicker">Exploring Mini Projects &middot; Day 1</p>
       <h1 class="app__title">Typing Speed Test</h1>
-      <p class="app__hint">Type the passage below. The timer starts with your first key.</p>
+      <p class="app__hint">Pick a text, then type it. The timer starts with your first key.</p>
     </header>
 
-    <section class="stats" aria-label="Live stats">
-      <div class="stat">
-        <span class="stat__label">WPM</span>
-        <span class="stat__value" id="wpm">0</span>
-      </div>
-      <div class="stat">
-        <span class="stat__label">Accuracy</span>
-        <span class="stat__value" id="accuracy">100%</span>
-      </div>
-      <div class="stat">
-        <span class="stat__label">Time</span>
-        <span class="stat__value" id="time">0.0s</span>
-      </div>
-    </section>
+    <div class="layout">
+      <div class="col">
+        <section class="panel setup" aria-label="Test setup">
+          <div>
+            <span class="field-label" id="source-label">Text</span>
+            <div class="seg" role="group" aria-labelledby="source-label">
+              <button class="seg__btn" type="button" data-source="random" aria-pressed="true">Random text</button>
+              <button class="seg__btn" type="button" data-source="own" aria-pressed="false">My own text</button>
+            </div>
+          </div>
 
-    <section class="card">
-      <p class="passage" id="passage" aria-label="Passage to type"></p>
-      <input
-        id="typing-input"
-        class="typing-input"
-        type="text"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        aria-label="Type the passage here"
-        placeholder="Start typing here..."
-      >
-      <div class="progress" aria-hidden="true">
-        <div class="progress__bar" id="progress-bar"></div>
-      </div>
-    </section>
+          <div>
+            <span class="field-label" id="length-label">Length</span>
+            <div class="seg" role="group" aria-labelledby="length-label">
+              <button class="seg__btn" type="button" data-length="passage" aria-pressed="true">Full text</button>
+              <button class="seg__btn" type="button" data-length="30" aria-pressed="false">30 seconds</button>
+              <button class="seg__btn" type="button" data-length="60" aria-pressed="false">60 seconds</button>
+            </div>
+          </div>
 
-    <section class="result" id="result" hidden>
-      <h2 class="result__title">Finished!</h2>
-      <p class="result__verdict" id="verdict"></p>
-      <div class="result__grid">
-        <div class="result__item">
-          <span class="result__num" id="final-wpm">0</span>
-          <span class="result__label">WPM</span>
-        </div>
-        <div class="result__item">
-          <span class="result__num" id="final-acc">0%</span>
-          <span class="result__label">Accuracy</span>
-        </div>
-        <div class="result__item">
-          <span class="result__num" id="final-time">0s</span>
-          <span class="result__label">Time</span>
-        </div>
-      </div>
-    </section>
+          <div class="own" id="own-box" hidden>
+            <label class="field-label" for="own-text">Paste or type your own paragraph (10 to 300 words)</label>
+            <textarea
+              id="own-text"
+              class="own__text"
+              rows="4"
+              maxlength="3000"
+              autocapitalize="off"
+              autocorrect="off"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Paste a paragraph here..."
+            ></textarea>
+            <div class="own__meta">
+              <span id="own-count">0 words</span>
+              <span class="own__msg" id="own-msg" role="status"></span>
+            </div>
+          </div>
 
-    <button class="btn" id="restart-btn" type="button">New passage</button>
+          <button class="btn" id="start-btn" type="button">New passage</button>
+        </section>
+
+        <section class="stats" aria-label="Live stats">
+          <div class="stat">
+            <span class="stat__label">WPM</span>
+            <span class="stat__value" id="wpm">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Accuracy</span>
+            <span class="stat__value" id="accuracy">100%</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label" id="time-label">Time</span>
+            <span class="stat__value" id="time">0.0s</span>
+          </div>
+        </section>
+
+        <section class="card" aria-label="Typing test">
+          <div class="passage-box" id="passage-box">
+            <p class="passage" id="passage"></p>
+          </div>
+          <input
+            id="typing-input"
+            class="typing-input"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            aria-describedby="passage"
+            aria-label="Type the text here"
+            placeholder="Start typing here..."
+          >
+          <div class="progress" aria-hidden="true">
+            <div class="progress__bar" id="progress-bar"></div>
+          </div>
+          <div class="card__foot">
+            <button class="btn btn--ghost" id="restart-btn" type="button">Restart this text</button>
+          </div>
+        </section>
+
+        <section class="result" id="result" hidden aria-live="polite">
+          <h2 class="result__title" id="result-title">Finished!</h2>
+          <p class="result__verdict" id="verdict"></p>
+          <div class="result__grid">
+            <div>
+              <span class="result__num" id="final-wpm">0</span>
+              <span class="result__label">WPM</span>
+            </div>
+            <div>
+              <span class="result__num" id="final-acc">0%</span>
+              <span class="result__label">Accuracy</span>
+            </div>
+            <div>
+              <span class="result__num" id="final-time">0s</span>
+              <span class="result__label">Time</span>
+            </div>
+          </div>
+          <p class="result__best" id="best-msg"></p>
+          <button class="btn result__again" id="again-btn" type="button">Try another text</button>
+        </section>
+      </div>
+
+      <aside class="col">
+        <section class="panel history" aria-labelledby="history-title">
+          <div class="history__head">
+            <h2 class="history__title" id="history-title">Run history</h2>
+            <p class="history__best">Personal best: <strong id="best">none yet</strong></p>
+          </div>
+          <p class="history__note" id="history-note">Your last 20 runs are saved in this browser.</p>
+          <div class="chart" id="chart" role="img" aria-label="WPM trend of your saved runs"></div>
+          <p class="empty" id="empty">No runs yet. Finish a test and it will show up here.</p>
+          <ol class="runs" id="runs"></ol>
+          <div class="history__foot">
+            <button class="btn btn--ghost" id="clear-btn" type="button">Clear history</button>
+          </div>
+        </section>
+      </aside>
+    </div>
   </main>
   <script src="script.js"></script>
 </body>

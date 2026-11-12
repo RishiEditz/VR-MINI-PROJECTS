@@ -1,17 +1,29 @@
-# Typing Speed Test (Exploring Mini Projects, Day 1)
+# Typing Speed Test
 
-A single-page typing speed test. Open `index.html` in a browser. No install, no build step.
+Exploring Mini Projects, Day 1. A small typing speed test in plain HTML, CSS and JavaScript.
 
-Files:
-- `index.html`: the page (passage, input box, stats, result card).
-- `style.css`: dark charcoal theme with lime and orange accents.
-- `script.js`: the test logic.
+**Live demo:** https://rishieditz.github.io/VR-MINI-PROJECTS/day-01-typing-speed-test/
 
-How it works:
-- A passage is picked at random from a short list. Click "New passage" for another one.
-- The timer starts on your first key press.
-- WPM = (correct characters / 5) / minutes elapsed.
-- Accuracy = correct keystrokes / total keystrokes. Backspace does not count as a keystroke.
-- The test finishes when the typed text matches the passage. Pasting is blocked.
+## Features
 
-Code shown in the video, in order: the page markup, the timer start, the WPM formula, the accuracy formula. The full code is in these files.
+- Random text, or your own paragraph (10 to 300 words).
+- Full text, 30 seconds or 60 seconds.
+- Live WPM, accuracy and time, with each character marked as you type.
+- Personal best and a history of your last 20 runs, saved in your browser only.
+- Works on phone, tablet, laptop and TV. No install, no build step.
+
+## Run it
+
+Open `index.html` in a browser. Keep the files in the same folder.
+
+## Files
+
+- `index.html`: the page.
+- `style.css`: the theme and the responsive layout.
+- `script.js`: the test logic and the saved history.
+
+## How the score works
+
+- WPM = (correct characters / 5) / minutes.
+- Accuracy = keys that matched / all keys pressed. Backspace is not counted.
+- The timer starts on your first key.
