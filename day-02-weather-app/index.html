@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Weather App | Exploring Mini Projects, Day 2</title>
+  <meta name="description" content="A weather app in plain HTML, CSS and JavaScript: search any city, see the current weather, an hourly strip and a 7-day forecast, with an animated sky.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='14' fill='%23ffd27a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-unit="C">
+  <div class="sky" id="sky" data-cond="sunny" aria-hidden="true">
+    <div class="stars" id="stars"></div>
+    <div class="moon"></div>
+    <div class="sun"></div>
+    <div class="clouds">
+      <i class="cloud c1"></i><i class="cloud c2"></i><i class="cloud c3"></i>
+    </div>
+    <div class="rain" id="rain"></div>
+    <div class="snow" id="snow"></div>
+    <div class="flash"></div>
+  </div>
+
+  <main class="app">
+    <header class="top">
+      <div class="brand">
+        <p class="eyebrow">Exploring Mini Projects &middot; Day 2</p>
+        <h1>Weather</h1>
+      </div>
+      <div class="unit" role="group" aria-label="Temperature unit">
+        <button type="button" data-unit="C" aria-pressed="true">&deg;C</button>
+        <button type="button" data-unit="F" aria-pressed="false">&deg;F</button>
+      </div>
+    </header>
+
+    <section class="panel search" aria-label="Find a city">
+      <form id="search-form" role="search" autocomplete="off">
+        <label for="city" class="sr-only">City name</label>
+        <input id="city" name="city" type="search" placeholder="Search a city, e.g. Lisbon" maxlength="80" enterkeyhint="search" autocapitalize="words">
+        <button type="submit" class="btn primary">Search</button>
+      </form>
+      <button type="button" id="locate" class="btn ghost locate">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="pin"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+        Use my location
+      </button>
+      <div class="recent" id="recent" hidden>
+        <span class="label">Recent</span>
+        <div class="chips" id="chips"></div>
+      </div>
+    </section>
+
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+    <div class="grid">
+      <section class="panel now is-loading" id="now" aria-labelledby="place">
+        <div class="place">
+          <h2 id="place">Find a city</h2>
+          <p id="place-meta" class="muted">Search any city, or tap Use my location.</p>
+        </div>
+        <div class="now-main">
+          <div class="icon-box" id="now-icon" aria-hidden="true"></div>
+          <div class="temp-block">
+            <p class="temp"><span id="temp">--</span><span class="deg" id="deg"></span></p>
+            <p class="cond" id="cond">Your forecast appears here</p>
+            <p class="muted" id="hilo"></p>
+          </div>
+        </div>
+        <ul class="stats">
+          <li><span class="k">Feels like</span><strong id="feels">--</strong></li>
+          <li><span class="k">Humidity</span><strong id="humid">--</strong></li>
+          <li><span class="k">Wind</span><strong id="wind">--</strong></li>
+        </ul>
+        <p class="updated" id="updated"></p>
+      </section>
+
+      <section class="panel hourly" aria-labelledby="h-title">
+        <h3 id="h-title">Next 24 hours</h3>
+        <ol class="strip" id="hourly" aria-label="Hourly forecast"></ol>
+      </section>
+
+      <section class="panel week" aria-labelledby="w-title">
+        <h3 id="w-title">7-day forecast</h3>
+        <ol class="daily" id="daily" aria-label="7-day forecast"></ol>
+      </section>
+    </div>
+
+    <footer class="foot">Weather data by Open-Meteo.com</footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

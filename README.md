@@ -7,7 +7,7 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | Day | Project | Status |
 | --- | --- | --- |
 | 1 | [Typing speed test](day-01-typing-speed-test/) | Done |
-| 2 | Weather app | Coming soon |
+| 2 | [Weather app](day-02-weather-app/) | Done |
 | 3 | To-do list | Coming soon |
 | 4 | Quiz app | Coming soon |
 | 5 | Calculator | Coming soon |
