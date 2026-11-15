@@ -1,80 +1,231 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Quiz App</title>
-  <meta name="description" content="A quiz app built with plain HTML, CSS and JavaScript. Pick a topic, beat the timer, review your answers and save your best score in the browser.">
+  <meta name="description" content="Play quick quizzes, make your own, and share it with friends using a link. Plain HTML, CSS and JavaScript, no sign-up.">
   <meta name="theme-color" content="#ff5c8a">
+  <meta property="og:title" content="Quiz App">
+  <meta property="og:description" content="Play quick quizzes, make your own, and share it with friends using a link.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb23f'/%3E%3Cstop offset='.55' stop-color='%23ff5c8a'/%3E%3Cstop offset='1' stop-color='%238a5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='45' font-family='Arial' font-weight='700' font-size='40' text-anchor='middle' fill='%231b0a12'%3E%3F%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="bg" aria-hidden="true"></div>
+  <a class="skip" href="#main">Skip to the quiz</a>
 
-  <main class="app">
+  <main class="app" id="main">
     <header class="head">
-      <div>
+      <div class="head__title">
         <p class="eyebrow">Test yourself</p>
         <h1>Quiz App</h1>
       </div>
-      <p class="best" id="best" aria-live="polite">Best: none yet</p>
+      <div class="head__tools">
+        <p class="best" id="best" aria-live="polite">Best: none yet</p>
+        <button type="button" class="icon-btn" id="btn-sound" aria-pressed="false" aria-label="Sound is off. Turn sound on" title="Sound">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="ic-speaker" d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path class="ic-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="ic-mute" d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" class="icon-btn" id="btn-theme" aria-label="Switch to the light theme" title="Theme">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="ic-moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/><g class="ic-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4" fill="currentColor"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg>
+        </button>
+      </div>
     </header>
+
+    <nav class="nav" id="nav" aria-label="Sections">
+      <button type="button" class="nav__btn" data-go="start">Play</button>
+      <button type="button" class="nav__btn" data-go="create">Create</button>
+      <button type="button" class="nav__btn" data-go="mine">My quizzes <span class="nav__count" id="mine-count" hidden>0</span></button>
+      <button type="button" class="nav__btn" data-go="scores">Scores</button>
+    </nav>
 
     <!-- Start screen: pick a topic -->
     <section class="screen is-active" id="screen-start" aria-labelledby="start-title">
-      <h2 id="start-title" class="screen__title">Pick a topic</h2>
-      <p class="screen__lead">Five questions. Fifteen seconds each. Go.</p>
+      <h2 id="start-title" class="screen__title" tabindex="-1">Pick a topic</h2>
+      <p class="screen__lead" id="start-lead">Choose a topic, a mode and a length. Then go.</p>
+
+      <div class="options-row">
+        <div class="seg" role="radiogroup" aria-label="Mode">
+          <span class="seg__label" id="mode-label">Mode</span>
+          <div class="seg__group" id="mode-group" aria-labelledby="mode-label"></div>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Length">
+          <span class="seg__label" id="len-label">Length</span>
+          <div class="seg__group" id="len-group" aria-labelledby="len-label"></div>
+        </div>
+      </div>
+
       <div class="topics" id="topics"></div>
+
+      <div class="promo">
+        <div>
+          <h3 class="promo__title">Make a quiz of your own</h3>
+          <p class="promo__text">Write your questions, then send a link to your friends on WhatsApp or any app.</p>
+        </div>
+        <button type="button" class="btn btn--primary" data-go="create">Create a quiz</button>
+      </div>
     </section>
 
     <!-- Quiz screen -->
-    <section class="screen" id="screen-quiz" aria-live="off">
+    <section class="screen" id="screen-quiz" aria-labelledby="quiz-title" hidden>
       <div class="quiz__top">
-        <p class="quiz__count" id="count">Question 1 of 5</p>
-        <p class="quiz__score"><span id="score">0</span> pts</p>
-      </div>
-      <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
-        <div class="progress__fill" id="progress-fill"></div>
+        <p class="quiz__title" id="quiz-title"></p>
+        <button type="button" class="btn btn--small btn--ghost" id="quit">Quit</button>
       </div>
 
-      <div class="timer" aria-label="Time left">
-        <div class="timer__bar"><div class="timer__fill" id="timer-fill"></div></div>
-        <p class="timer__text" id="timer-text">15</p>
+      <div class="ready" id="ready" hidden>
+        <p class="ready__label" id="ready-label">Get ready</p>
+        <p class="ready__num" id="ready-num" aria-hidden="true">3</p>
+        <p class="ready__hint">Tap anywhere or press Enter to start now</p>
       </div>
 
-      <h2 class="question" id="question" tabindex="-1"></h2>
-      <div class="options" id="options" role="group" aria-label="Answers"></div>
+      <div class="quiz__body" id="quiz-body">
+        <div class="quiz__stats">
+          <p class="quiz__count" id="count">Question 1 of 5</p>
+          <p class="pill pill--streak" id="streak-pill" title="Right answers in a row"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-1-.4-2-1-3 3 1 5 4 5 7a7 7 0 0 1-14 0c0-6 5-7 7-13z" fill="currentColor"/></svg><span class="sr-only">Streak </span><span id="streak">0</span></p>
+          <p class="pill pill--score"><span id="score">0</span> pts</p>
+        </div>
+        <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress">
+          <div class="progress__fill" id="progress-fill"></div>
+        </div>
 
-      <div class="feedback" id="feedback" role="status" aria-live="polite" hidden>
-        <p class="feedback__title" id="feedback-title"></p>
-        <p class="feedback__text" id="feedback-text"></p>
-      </div>
+        <div class="timer" role="timer" aria-label="Time left">
+          <div class="timer__bar"><div class="timer__fill" id="timer-fill"></div></div>
+          <p class="timer__text" id="timer-text">15</p>
+        </div>
 
-      <div class="quiz__actions">
-        <p class="hint">Keys 1 to 4 pick an answer, Enter goes next.</p>
-        <button type="button" class="btn btn--primary" id="next" disabled>Next</button>
+        <div class="qcard" id="qcard">
+          <h2 class="question" id="question" tabindex="-1"></h2>
+          <div class="options" id="options" role="group" aria-label="Answers"></div>
+
+          <div class="feedback" id="feedback" role="status" aria-live="polite" hidden>
+            <p class="feedback__title" id="feedback-title"></p>
+            <p class="feedback__text" id="feedback-text"></p>
+          </div>
+        </div>
+
+        <div class="quiz__actions">
+          <p class="hint">Keys 1 to 4 pick an answer, Enter goes next.</p>
+          <button type="button" class="btn btn--primary" id="next" disabled>Next</button>
+        </div>
       </div>
     </section>
 
     <!-- Result screen -->
-    <section class="screen" id="screen-result" aria-labelledby="result-title">
+    <section class="screen" id="screen-result" aria-labelledby="result-title" hidden>
       <div class="result__hero">
         <p class="result__label" id="result-label">Quiz complete</p>
+        <h2 class="sr-only" id="result-title" tabindex="-1">Your result</h2>
         <p class="result__score" id="result-score">0/5</p>
         <p class="result__msg" id="result-msg"></p>
         <p class="result__best" id="result-best"></p>
+        <ul class="stats" id="result-stats"></ul>
       </div>
+
+      <div class="result__actions" id="result-actions"></div>
 
       <h3 class="review__title">Review your answers</h3>
       <ol class="review" id="review"></ol>
+    </section>
 
+    <!-- Create screen -->
+    <section class="screen" id="screen-create" aria-labelledby="create-title" hidden>
+      <h2 class="screen__title" id="create-title" tabindex="-1">Create your own quiz</h2>
+      <p class="screen__lead" id="create-lead">Add a title and your questions. Tap the circle next to the right answer.</p>
+      <div class="builder">
+        <form class="builder__form" id="builder-form" novalidate autocomplete="off">
+          <div class="errors" id="errors" role="alert" hidden></div>
+
+          <div class="field">
+            <label for="b-title">Quiz title</label>
+            <input type="text" id="b-title" maxlength="60" placeholder="For example: How well do you know me?">
+            <p class="field__meta"><span class="field__err" id="b-title-err"></span><span class="field__count" id="b-title-count">0/60</span></p>
+          </div>
+          <div class="field field--inline">
+            <label for="b-time">Time for each question</label>
+            <select id="b-time"></select>
+          </div>
+
+          <div class="bq-list" id="b-questions"></div>
+          <button type="button" class="btn btn--ghost btn--block" id="b-add">Add a question</button>
+
+          <div class="linkmeter" id="linkmeter" aria-live="polite"></div>
+
+          <div class="builder__actions">
+            <button type="submit" class="btn btn--primary" id="b-save">Save quiz</button>
+            <button type="button" class="btn btn--accent" id="b-save-share">Save and share</button>
+            <button type="button" class="btn btn--ghost" id="b-play">Play it now</button>
+          </div>
+          <div class="builder__more">
+            <button type="button" class="link-btn" id="b-cancel">Cancel</button>
+            <button type="button" class="link-btn" id="b-reset">Start over</button>
+          </div>
+        </form>
+
+        <aside class="builder__preview" aria-label="Live preview">
+          <h3 class="preview__title">Live preview</h3>
+          <div class="preview__chips" id="preview-chips" role="group" aria-label="Choose a question to preview"></div>
+          <div class="preview" id="preview"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- My quizzes -->
+    <section class="screen" id="screen-mine" aria-labelledby="mine-title" hidden>
+      <h2 class="screen__title" id="mine-title" tabindex="-1">My quizzes</h2>
+      <p class="screen__lead">Quizzes you made are saved on this device. Play, share, edit or copy them.</p>
+      <div class="mine" id="mine-list"></div>
+      <form class="paste" id="paste-form" autocomplete="off">
+        <label for="paste-input">Got a link from a friend? Paste it here</label>
+        <div class="paste__row">
+          <input type="text" id="paste-input" inputmode="url" placeholder="Paste a quiz link">
+          <button type="submit" class="btn btn--ghost">Open</button>
+        </div>
+        <p class="field__err" id="paste-err" role="alert"></p>
+      </form>
+    </section>
+
+    <!-- Scores -->
+    <section class="screen" id="screen-scores" aria-labelledby="scores-title" hidden>
+      <h2 class="screen__title" id="scores-title" tabindex="-1">Top scores</h2>
+      <p class="screen__lead">Your best runs on this device.</p>
+      <div class="field field--inline">
+        <label for="player-name">Your name</label>
+        <input type="text" id="player-name" maxlength="20" placeholder="Player">
+      </div>
+      <ol class="board" id="board"></ol>
       <div class="result__actions">
-        <button type="button" class="btn btn--primary" id="restart">Play again</button>
-        <button type="button" class="btn btn--ghost" id="change-topic">Change topic</button>
+        <button type="button" class="btn btn--ghost" id="clear-scores">Clear scores</button>
       </div>
     </section>
   </main>
 
+  <dialog class="dialog" id="share" aria-labelledby="share-title">
+    <div class="dialog__box">
+      <div class="dialog__head">
+        <h2 class="dialog__title" id="share-title">Share</h2>
+        <button type="button" class="icon-btn icon-btn--small" id="share-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>
+        </button>
+      </div>
+      <p class="dialog__msg" id="share-msg"></p>
+      <label class="dialog__label" for="share-link">Link</label>
+      <input type="text" id="share-link" class="dialog__link" readonly>
+      <p class="linkinfo" id="share-info" role="status"></p>
+      <div class="share-grid" id="share-grid">
+        <button type="button" class="btn btn--primary" id="share-copy">Copy link</button>
+        <a class="btn btn--wa" id="share-wa" target="_blank" rel="noopener noreferrer">Share on WhatsApp</a>
+        <button type="button" class="btn btn--accent" id="share-native" hidden>More apps</button>
+        <a class="btn btn--ghost" id="share-tg" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a class="btn btn--ghost" id="share-x" target="_blank" rel="noopener noreferrer">X</a>
+        <a class="btn btn--ghost" id="share-mail">Email</a>
+      </div>
+      <p class="dialog__status" id="share-status" role="status"></p>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" popover="manual" role="status" aria-live="polite"></div>
   <div class="burst-layer" id="burst" aria-hidden="true"></div>
   <p class="sr-only" id="status" role="status" aria-live="polite"></p>
 
