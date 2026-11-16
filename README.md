@@ -10,7 +10,7 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | 2 | [Weather app](day-02-weather-app/) | Done |
 | 3 | [To-do list](day-03-todo-list/) | Done |
 | 4 | [Quiz app](day-04-quiz-app/) | Done |
-| 5 | Calculator | Coming soon |
+| 5 | [Calculator](day-05-calculator/) | Done |
 | 6 | Stopwatch and countdown timer | Coming soon |
 | 7 | Password generator | Coming soon |
 | 8 | Expense tracker | Coming soon |
