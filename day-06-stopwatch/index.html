@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Stopwatch and Timer</title>
+  <meta name="description" content="A stopwatch with laps and a countdown timer with presets, keyboard shortcuts and a sound and visual alert at zero. Plain HTML, CSS and JavaScript.">
+  <meta name="theme-color" content="#ff4f7b">
+  <meta property="og:title" content="Stopwatch and Timer">
+  <meta property="og:description" content="A stopwatch with laps and a countdown timer with presets and an alert at zero.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb347'/%3E%3Cstop offset='.5' stop-color='%23ff4f7b'/%3E%3Cstop offset='1' stop-color='%236d2fd1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ccircle cx='32' cy='35' r='19' fill='none' stroke='%23fff3dc' stroke-width='5'/%3E%3Cpath d='M32 35l0-10M32 6h0' stroke='%23fff3dc' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <p class="eyebrow">Mini Projects &middot; Day 6</p>
+      <h1>Stopwatch &amp; Timer</h1>
+    </header>
+
+    <section class="card" id="timer-card" aria-label="Stopwatch and countdown timer" data-mode="sw">
+      <div class="tabs" role="tablist" aria-label="Mode">
+        <button type="button" role="tab" class="tab" id="tab-sw" data-mode="sw" aria-controls="panel-sw" aria-selected="true" tabindex="0">Stopwatch</button>
+        <button type="button" role="tab" class="tab" id="tab-cd" data-mode="cd" aria-controls="panel-cd" aria-selected="false" tabindex="-1">Countdown</button>
+      </div>
+
+      <!-- Stopwatch -->
+      <section class="panel" id="panel-sw" role="tabpanel" aria-labelledby="tab-sw">
+        <div class="stage">
+          <div class="face">
+            <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+              <defs>
+                <linearGradient id="arc-grad-sw" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffe08a"/>
+                  <stop offset="1" stop-color="#ff7ab0"/>
+                </linearGradient>
+              </defs>
+              <circle class="ring__track" cx="50" cy="50" r="46"/>
+              <circle class="ring__arc" id="sw-arc" cx="50" cy="50" r="46" stroke="url(#arc-grad-sw)"/>
+            </svg>
+            <div class="face__inner">
+              <output class="time" id="sw-time" for="tab-sw">00:00.00</output>
+              <p class="state" id="sw-state">Ready</p>
+            </div>
+          </div>
+
+          <div class="side">
+            <div class="actions">
+              <button type="button" class="btn btn--primary" id="sw-toggle">Start</button>
+              <button type="button" class="btn" id="sw-lap" disabled>Lap</button>
+              <button type="button" class="btn btn--ghost" id="sw-reset">Reset</button>
+            </div>
+
+            <section class="laps" aria-labelledby="laps-title">
+              <div class="laps__head">
+                <h2 id="laps-title">Laps</h2>
+                <span class="laps__count" id="lap-count" aria-live="off">0 laps</span>
+                <button type="button" class="btn-text" id="clear-laps">Clear</button>
+              </div>
+              <ol class="laps__list" id="laps"></ol>
+              <p class="empty" id="laps-empty">Press Lap while the stopwatch runs to save a split.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- Countdown -->
+      <section class="panel" id="panel-cd" role="tabpanel" aria-labelledby="tab-cd" hidden>
+        <div class="stage">
+          <div class="face">
+            <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+              <defs>
+                <linearGradient id="arc-grad-cd" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffe08a"/>
+                  <stop offset="1" stop-color="#ff7ab0"/>
+                </linearGradient>
+              </defs>
+              <circle class="ring__track" cx="50" cy="50" r="46"/>
+              <circle class="ring__arc" id="cd-arc" cx="50" cy="50" r="46" stroke="url(#arc-grad-cd)"/>
+            </svg>
+            <div class="face__inner">
+              <output class="time" id="cd-time" for="tab-cd">05:00</output>
+              <p class="state" id="cd-state">Set a time</p>
+            </div>
+          </div>
+
+          <div class="side">
+            <div class="presets" role="group" aria-label="Preset times">
+              <button type="button" class="chip" data-preset="60">1 min</button>
+              <button type="button" class="chip" data-preset="300">5 min</button>
+              <button type="button" class="chip" data-preset="600">10 min</button>
+              <button type="button" class="chip" data-preset="1500">25 min</button>
+            </div>
+
+            <fieldset class="inputs" id="timer-inputs">
+              <legend>Custom time</legend>
+              <label class="field"><span>Hours</span><input id="in-h" type="number" inputmode="numeric" min="0" max="99" value="0"></label>
+              <label class="field"><span>Minutes</span><input id="in-m" type="number" inputmode="numeric" min="0" max="59" value="5"></label>
+              <label class="field"><span>Seconds</span><input id="in-s" type="number" inputmode="numeric" min="0" max="59" value="0"></label>
+            </fieldset>
+
+            <div class="actions">
+              <button type="button" class="btn btn--primary" id="cd-toggle">Start</button>
+              <button type="button" class="btn btn--ghost" id="cd-reset">Reset</button>
+            </div>
+
+            <p class="alert" id="cd-alert" role="status"></p>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="foot">
+      <button type="button" class="btn btn--small" id="sound" aria-pressed="true">Sound on</button>
+      <p class="hint">Space start or pause &middot; L lap &middot; R reset &middot; 1 and 2 switch &middot; Esc stops the alarm</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
