@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Password Generator</title>
+  <meta name="description" content="Make strong random passwords and passphrases in your browser. Length slider, character sets, look-alike filter, strength meter and one-tap copy. Plain HTML, CSS and JavaScript.">
+  <meta name="theme-color" content="#2a1a6e">
+  <meta property="og:title" content="Password Generator">
+  <meta property="og:description" content="Strong random passwords and passphrases, made on your device.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235eead4'/%3E%3Cstop offset='.55' stop-color='%237c5cff'/%3E%3Cstop offset='1' stop-color='%23ff5fa2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Crect x='17' y='29' width='30' height='22' rx='5' fill='%23fff'/%3E%3Cpath d='M23 29v-6a9 9 0 0 1 18 0v6' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <p class="eyebrow">Mini Projects &middot; Day 7</p>
+      <h1>Password Generator</h1>
+    </header>
+
+    <section class="card" id="gen" aria-label="Password generator" data-mode="password">
+      <div class="tabs" role="tablist" aria-label="Type">
+        <button type="button" role="tab" class="tab" id="tab-password" data-mode="password" aria-controls="panel-password" aria-selected="true" tabindex="0">Password</button>
+        <button type="button" role="tab" class="tab" id="tab-passphrase" data-mode="passphrase" aria-controls="panel-passphrase" aria-selected="false" tabindex="-1">Passphrase</button>
+      </div>
+
+      <div class="grid">
+        <div class="col col--out">
+          <div class="out" id="out">
+            <output class="pw" id="pw" for="tab-password tab-passphrase" tabindex="0" aria-label="Generated password"></output>
+            <div class="out__actions">
+              <button type="button" class="btn btn--primary" id="copy">Copy</button>
+              <button type="button" class="btn" id="regen">New</button>
+              <button type="button" class="btn btn--ghost" id="hide" aria-pressed="false">Hide</button>
+            </div>
+          </div>
+
+          <div class="meter" id="meter" data-level="0">
+            <div class="meter__bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="meter__text">
+              <strong class="meter__label" id="meter-label">Strong</strong>
+              <span class="meter__bits" id="meter-bits">0 bits</span>
+            </div>
+            <p class="meter__time" id="meter-time"></p>
+          </div>
+
+          <p class="note" id="note">Made on your device with the secure random generator of your browser. Nothing is sent and no password is saved.</p>
+        </div>
+
+        <div class="col col--set">
+          <!-- Password settings -->
+          <section class="panel" id="panel-password" role="tabpanel" aria-labelledby="tab-password">
+            <div class="row">
+              <label class="row__label" for="len">Length</label>
+              <div class="stepper">
+                <button type="button" class="step" id="len-minus" aria-label="Shorter">&minus;</button>
+                <input class="num" id="len-num" type="number" inputmode="numeric" min="4" max="64" value="16" aria-label="Length in characters">
+                <button type="button" class="step" id="len-plus" aria-label="Longer">+</button>
+              </div>
+            </div>
+            <input class="range" id="len" type="range" min="4" max="64" value="16" aria-label="Length slider">
+
+            <fieldset class="sets">
+              <legend>Characters</legend>
+              <label class="chip"><input type="checkbox" id="set-lower" checked><span><b>abc</b> Lowercase</span></label>
+              <label class="chip"><input type="checkbox" id="set-upper" checked><span><b>ABC</b> Uppercase</span></label>
+              <label class="chip"><input type="checkbox" id="set-digits" checked><span><b>123</b> Numbers</span></label>
+              <label class="chip"><input type="checkbox" id="set-symbols" checked><span><b>#$%</b> Symbols</span></label>
+            </fieldset>
+
+            <label class="switch">
+              <input type="checkbox" id="avoid">
+              <span class="switch__track" aria-hidden="true"></span>
+              <span class="switch__text">Avoid look-alikes<small>Skips i l 1 L o 0 O</small></span>
+            </label>
+          </section>
+
+          <!-- Passphrase settings -->
+          <section class="panel" id="panel-passphrase" role="tabpanel" aria-labelledby="tab-passphrase" hidden>
+            <div class="row">
+              <label class="row__label" for="words">Words</label>
+              <div class="stepper">
+                <button type="button" class="step" id="words-minus" aria-label="Fewer words">&minus;</button>
+                <input class="num" id="words-num" type="number" inputmode="numeric" min="3" max="10" value="5" aria-label="Number of words">
+                <button type="button" class="step" id="words-plus" aria-label="More words">+</button>
+              </div>
+            </div>
+            <input class="range" id="words" type="range" min="3" max="10" value="5" aria-label="Words slider">
+
+            <fieldset class="sets sets--sep">
+              <legend>Separator</legend>
+              <label class="chip chip--small"><input type="radio" name="sep" value="-" checked><span>Dash <b>-</b></span></label>
+              <label class="chip chip--small"><input type="radio" name="sep" value="."><span>Dot <b>.</b></span></label>
+              <label class="chip chip--small"><input type="radio" name="sep" value="_"><span>Underscore <b>_</b></span></label>
+              <label class="chip chip--small"><input type="radio" name="sep" value=" "><span>Space</span></label>
+            </fieldset>
+
+            <label class="switch">
+              <input type="checkbox" id="cap" checked>
+              <span class="switch__track" aria-hidden="true"></span>
+              <span class="switch__text">Capitalise words</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="num">
+              <span class="switch__track" aria-hidden="true"></span>
+              <span class="switch__text">Add a number at the end</span>
+            </label>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p class="hint">G new &middot; C copy &middot; H hide &middot; 1 password &middot; 2 passphrase</p>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="words.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
