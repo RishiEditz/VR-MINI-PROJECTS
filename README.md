@@ -13,7 +13,7 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | 5 | [Calculator](day-05-calculator/) | Done |
 | 6 | [Stopwatch and countdown timer](day-06-stopwatch/) | Done |
 | 7 | [Password generator](day-07-password-generator/) | Done |
-| 8 | Expense tracker | Coming soon |
+| 8 | [Expense tracker](day-08-expense-tracker/) | Done |
 | 9 | Personal notes | Coming soon |
 | 10 | Memory card game | Coming soon |
 | 11 | Currency converter | Coming soon |

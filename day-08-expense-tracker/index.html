@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Expense Tracker</title>
+  <meta name="description" content="Track your spending by category with a monthly summary, a budget bar, charts, filters, rupee formatting and CSV export. Plain HTML, CSS and JavaScript. Everything stays in your browser.">
+  <meta name="theme-color" content="#0a4a3c">
+  <meta property="og:title" content="Expense Tracker">
+  <meta property="og:description" content="Add expenses, see where the money goes and export to CSV. Saved only in your browser.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd45e'/%3E%3Cstop offset='.55' stop-color='%2339d39a'/%3E%3Cstop offset='1' stop-color='%230a6a55'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Crect x='12' y='34' width='9' height='16' rx='3' fill='%23fff'/%3E%3Crect x='27' y='22' width='9' height='28' rx='3' fill='%23fff'/%3E%3Crect x='42' y='12' width='9' height='38' rx='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <p class="eyebrow">Mini Projects &middot; Day 8</p>
+      <h1>Expense Tracker</h1>
+    </header>
+
+    <div class="bar">
+      <div class="monthnav" role="group" aria-label="Month">
+        <button type="button" class="step" id="prev" aria-label="Previous month">&lsaquo;</button>
+        <strong class="monthnav__label" id="month-label" aria-live="polite">Month</strong>
+        <button type="button" class="step" id="next" aria-label="Next month">&rsaquo;</button>
+      </div>
+      <button type="button" class="btn btn--primary" id="add"><span aria-hidden="true">+</span><span>Add<span class="more"> expense</span></span></button>
+    </div>
+
+    <div class="layout">
+      <div class="col">
+        <section class="stats" aria-label="Month at a glance">
+          <div class="stat stat--main">
+            <span class="stat__label">Spent</span>
+            <strong class="stat__value" id="st-total">&#8377;0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat__label" id="st-avg-label">Daily average</span>
+            <strong class="stat__value" id="st-avg">&#8377;0</strong>
+          </div>
+          <div class="stat">
+            <span class="stat__label">Entries</span>
+            <strong class="stat__value" id="st-count">0</strong>
+          </div>
+          <div class="stat stat--wide">
+            <span class="stat__label">Top category</span>
+            <strong class="stat__value stat__value--text" id="st-top">None</strong>
+            <span class="stat__sub" id="st-top-sub"></span>
+          </div>
+        </section>
+
+        <section class="card" id="summary" aria-labelledby="summary-title">
+          <div class="card__head">
+            <h2 id="summary-title">Monthly summary</h2>
+            <button type="button" class="btn btn--small" id="edit-budget">Set budget</button>
+          </div>
+
+          <div class="budget" id="budget" data-state="none">
+            <div class="budget__text">
+              <span id="budget-main">No budget set</span>
+              <span id="budget-side"></span>
+            </div>
+            <div class="budget__track" aria-hidden="true"><span class="budget__fill" id="budget-fill"></span></div>
+          </div>
+
+          <div class="split">
+            <div class="donut" id="donut-wrap">
+              <svg viewBox="0 0 120 120" class="donut__svg" id="donut" role="img" aria-label="Spending by category"></svg>
+              <div class="donut__mid" aria-hidden="true">
+                <strong id="donut-amount">&#8377;0</strong>
+                <span id="donut-label">spent</span>
+              </div>
+            </div>
+            <ul class="legend" id="legend"></ul>
+          </div>
+        </section>
+
+        <section class="card" id="trend-card" aria-labelledby="trend-title">
+          <div class="card__head">
+            <h2 id="trend-title">Last 6 months</h2>
+          </div>
+          <div class="trend" id="trend"></div>
+        </section>
+      </div>
+
+      <div class="col">
+        <section class="card" id="list-card" aria-labelledby="list-title">
+          <div class="card__head">
+            <h2 id="list-title">Expenses</h2>
+            <span class="count" id="list-count"></span>
+          </div>
+
+          <div class="filters">
+            <div class="search">
+              <input type="search" id="q" placeholder="Search notes" aria-label="Search notes" autocomplete="off" maxlength="60">
+            </div>
+            <label class="select">
+              <span class="visually-hidden">Sort</span>
+              <select id="sort">
+                <option value="new">Newest first</option>
+                <option value="old">Oldest first</option>
+                <option value="high">Highest amount</option>
+                <option value="low">Lowest amount</option>
+              </select>
+            </label>
+          </div>
+          <div class="cats" id="cat-filter" role="group" aria-label="Filter by category"></div>
+          <label class="switch">
+            <input type="checkbox" id="all-time">
+            <span class="switch__track" aria-hidden="true"></span>
+            <span class="switch__text">Show all months</span>
+          </label>
+
+          <div class="list" id="list" aria-live="polite"></div>
+          <div class="empty" id="empty" hidden>
+            <p class="empty__title" id="empty-title">No expenses here</p>
+            <p class="empty__text" id="empty-text">Add one to see it appear.</p>
+            <button type="button" class="btn btn--primary" id="empty-add">Add expense</button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="foot card">
+      <div class="foot__actions">
+        <button type="button" class="btn" id="export">Export CSV</button>
+        <button type="button" class="btn btn--ghost" id="demo">Reset demo data</button>
+        <button type="button" class="btn btn--ghost" id="clear">Clear all</button>
+      </div>
+      <p class="hint" id="hint">Saved only in this browser. Demo data is made up. Nothing is sent anywhere.</p>
+    </footer>
+  </main>
+
+  <dialog class="sheet" id="dlg" aria-labelledby="dlg-title">
+    <form id="form" novalidate autocomplete="off">
+      <h2 id="dlg-title">Add expense</h2>
+
+      <div class="field">
+        <label for="f-amount">Amount</label>
+        <div class="money">
+          <span aria-hidden="true">&#8377;</span>
+          <input id="f-amount" type="text" inputmode="decimal" placeholder="0" maxlength="12" aria-describedby="err-amount">
+        </div>
+        <p class="err" id="err-amount" role="alert"></p>
+      </div>
+
+      <fieldset class="field cats-pick" id="f-cats">
+        <legend>Category</legend>
+      </fieldset>
+
+      <div class="field">
+        <label for="f-date">Date</label>
+        <input id="f-date" type="date" required>
+        <p class="err" id="err-date" role="alert"></p>
+      </div>
+
+      <div class="field">
+        <label for="f-note">Note</label>
+        <input id="f-note" type="text" maxlength="60" placeholder="What was it for? (optional)">
+      </div>
+
+      <div class="sheet__actions">
+        <button type="button" class="btn btn--danger" id="f-delete" hidden>Delete</button>
+        <button type="button" class="btn" id="f-cancel">Cancel</button>
+        <button type="submit" class="btn btn--primary" id="f-save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="sheet sheet--small" id="dlg-budget" aria-labelledby="bud-title">
+    <form id="form-budget" novalidate autocomplete="off">
+      <h2 id="bud-title">Monthly budget</h2>
+      <div class="field">
+        <label for="b-amount">Amount for every month</label>
+        <div class="money">
+          <span aria-hidden="true">&#8377;</span>
+          <input id="b-amount" type="text" inputmode="decimal" placeholder="0" maxlength="12" aria-describedby="err-budget">
+        </div>
+        <p class="err" id="err-budget" role="alert"></p>
+        <p class="hint">Enter 0 to switch the budget off.</p>
+      </div>
+      <div class="sheet__actions">
+        <button type="button" class="btn" id="b-cancel">Cancel</button>
+        <button type="submit" class="btn btn--primary">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span id="toast-text"></span>
+    <button type="button" id="toast-undo" hidden>Undo</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
