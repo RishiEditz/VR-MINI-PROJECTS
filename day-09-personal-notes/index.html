@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Personal Notes</title>
+  <meta name="description" content="Write notes with tags, colour labels, pins and search. Autosaves in your browser, with JSON export and import. Plain HTML, CSS and JavaScript.">
+  <meta name="theme-color" content="#2a0f5c">
+  <meta property="og:title" content="Personal Notes">
+  <meta property="og:description" content="Notes with tags, colours, pins and search. Saved only in your browser.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd66b'/%3E%3Cstop offset='.5' stop-color='%23ff5fc4'/%3E%3Cstop offset='1' stop-color='%237c5cff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Crect x='14' y='16' width='36' height='6' rx='3' fill='%23fff'/%3E%3Crect x='14' y='29' width='36' height='6' rx='3' fill='%23fff'/%3E%3Crect x='14' y='42' width='22' height='6' rx='3' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span><span class="blob blob--c"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <div class="head__titles">
+        <p class="eyebrow">Mini Projects &middot; Day 9</p>
+        <h1>Personal Notes</h1>
+      </div>
+      <div class="head__tools" role="group" aria-label="Backup and theme">
+        <button type="button" class="btn btn--ghost" id="export">Export</button>
+        <button type="button" class="btn btn--ghost" id="import">Import</button>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+        <button type="button" class="btn btn--ghost btn--icon" id="theme" aria-label="Switch to light theme" title="Switch theme">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path id="theme-icon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <p class="notice" id="storage-warn" role="alert" hidden>This browser is blocking storage, so notes will be lost when you close the tab. Export a backup to keep them.</p>
+
+    <div class="layout">
+      <section class="pane pane--list" id="listpane" aria-label="Your notes">
+        <div class="toolbar">
+          <div class="search">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 0 4.6 13.4l4.5 4.5 1.4-1.4-4.5-4.5A7.5 7.5 0 0 0 10.5 3zm0 2a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11z" fill="currentColor"/></svg>
+            <input type="search" id="q" placeholder="Search notes and tags" aria-label="Search notes and tags" autocomplete="off" maxlength="60">
+          </div>
+          <button type="button" class="btn btn--primary" id="new"><span aria-hidden="true">+</span><span>New<span class="more"> note</span></span></button>
+        </div>
+
+        <div class="colors" id="color-filter" role="group" aria-label="Filter by colour"></div>
+        <div class="tags" id="tag-filter" role="group" aria-label="Filter by tag"></div>
+
+        <div class="meta">
+          <span class="count" id="count" aria-live="polite"></span>
+          <label class="select">
+            <span class="visually-hidden">Sort notes</span>
+            <select id="sort">
+              <option value="edited">Last edited</option>
+              <option value="created">Newest created</option>
+              <option value="title">Title A to Z</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="list" id="list"></div>
+        <div class="empty" id="empty" hidden>
+          <p class="empty__title" id="empty-title">No notes yet</p>
+          <p class="empty__text" id="empty-text">Tap New to write your first one.</p>
+          <button type="button" class="btn btn--small" id="empty-clear" hidden>Clear filters</button>
+        </div>
+      </section>
+
+      <section class="pane pane--editor editor" id="editor" aria-label="Note editor">
+        <div class="editor__empty" id="editor-empty">
+          <div class="editor__art" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p class="empty__title">Pick a note to read or edit</p>
+          <p class="empty__text">Everything you type is saved as you go.</p>
+        </div>
+
+        <div class="editor__body" id="editor-body" hidden>
+          <div class="editor__bar">
+            <button type="button" class="btn btn--ghost back" id="back" aria-label="Back to all notes">&lsaquo; Notes</button>
+            <span class="status" id="status" aria-live="polite">Saved</span>
+            <button type="button" class="btn btn--ghost" id="pin" aria-pressed="false">Pin</button>
+            <button type="button" class="btn btn--danger" id="delete">Delete</button>
+          </div>
+
+          <label class="visually-hidden" for="f-title">Title</label>
+          <input type="text" id="f-title" class="f-title" placeholder="Title" maxlength="120" autocomplete="off">
+
+          <div class="swatches" id="swatches" role="radiogroup" aria-label="Colour label"></div>
+
+          <div class="tagedit" id="tagedit">
+            <span id="tagchips" class="tagchips"></span>
+            <label class="visually-hidden" for="f-tag">Add a tag</label>
+            <input type="text" id="f-tag" placeholder="Add tag, press Enter" maxlength="24" autocomplete="off" enterkeyhint="done">
+          </div>
+
+          <label class="visually-hidden" for="f-body">Note</label>
+          <textarea id="f-body" class="f-body" placeholder="Write something..." maxlength="20000"></textarea>
+
+          <div class="editor__foot">
+            <span id="counts">0 words</span>
+            <span id="edited"></span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toast-text"></span>
+    <button type="button" id="toast-undo">Undo</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
