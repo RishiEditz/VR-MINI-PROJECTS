@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Memory Match</title>
+  <meta name="description" content="A memory card game with three levels, four picture sets, a move counter, a timer and best scores saved in your browser. Plain HTML, CSS and JavaScript.">
+  <meta name="theme-color" content="#2a0a08">
+  <meta property="og:title" content="Memory Match">
+  <meta property="og:description" content="Flip cards, find every pair in the fewest moves. Three levels, four picture sets, best scores saved on your device.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd25e'/%3E%3Cstop offset='.55' stop-color='%23ff6a3d'/%3E%3Cstop offset='1' stop-color='%23c01c3c'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Crect x='10' y='14' width='20' height='28' rx='5' fill='%23fff'/%3E%3Crect x='34' y='22' width='20' height='28' rx='5' fill='%23fff' fill-opacity='.7'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span><span class="blob blob--c"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <div class="head__titles">
+        <p class="eyebrow">Mini Projects &middot; Day 10</p>
+        <h1>Memory Match</h1>
+      </div>
+      <div class="head__tools" role="group" aria-label="Sound and theme">
+        <button type="button" class="btn btn--ghost btn--icon" id="sound" aria-pressed="true" aria-label="Sound on" title="Sound">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path id="sound-waves" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button type="button" class="btn btn--ghost btn--icon" id="theme" aria-label="Switch to light theme" title="Switch theme">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path id="theme-icon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <section class="play" aria-label="Game">
+        <div class="options">
+          <div class="seg" id="levels" role="radiogroup" aria-label="Level">
+            <button type="button" role="radio" class="seg__btn" data-level="easy" aria-checked="false">Easy <small>3&times;4</small></button>
+            <button type="button" role="radio" class="seg__btn" data-level="medium" aria-checked="false">Medium <small>4&times;4</small></button>
+            <button type="button" role="radio" class="seg__btn" data-level="hard" aria-checked="false">Hard <small>4&times;6</small></button>
+          </div>
+          <label class="select">
+            <span class="visually-hidden">Picture set</span>
+            <select id="pack"></select>
+          </label>
+        </div>
+
+        <div class="stats" aria-label="Score">
+          <div class="stat"><span class="stat__label">Moves</span><span class="stat__value" id="moves">0</span></div>
+          <div class="stat"><span class="stat__label">Time</span><span class="stat__value" id="time">0:00</span></div>
+          <div class="stat"><span class="stat__label">Pairs</span><span class="stat__value" id="pairs">0/6</span></div>
+          <div class="stat stat--best"><span class="stat__label">Best</span><span class="stat__value" id="best">--</span></div>
+        </div>
+
+        <div class="boardwrap">
+          <div class="board" id="board" role="group" aria-label="Memory cards"></div>
+        </div>
+
+        <p class="hint" id="hint" aria-live="polite">Flip two cards to find a pair.</p>
+
+        <div class="actions">
+          <button type="button" class="btn btn--primary" id="restart">New game</button>
+        </div>
+      </section>
+
+      <aside class="side" aria-label="Scores">
+        <h2 class="side__title">Best scores</h2>
+        <ul class="bests" id="bests"></ul>
+        <div class="side__row">
+          <h2 class="side__title">Recent games</h2>
+          <button type="button" class="btn btn--small" id="clear-history">Clear</button>
+        </div>
+        <ol class="history" id="history"></ol>
+        <p class="empty" id="history-empty">Finish a game and it shows up here.</p>
+        <p class="note">Scores stay in this browser only.</p>
+      </aside>
+    </div>
+  </main>
+
+  <dialog class="win" id="win" aria-labelledby="win-title">
+    <form method="dialog" class="win__card">
+      <p class="win__stars" id="win-stars" aria-label=""></p>
+      <h2 id="win-title">You did it!</h2>
+      <p class="win__line" id="win-line"></p>
+      <p class="win__badge" id="win-badge" hidden>New best!</p>
+      <div class="win__actions">
+        <button type="button" class="btn btn--primary" id="win-again">Play again</button>
+        <button type="submit" class="btn">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
