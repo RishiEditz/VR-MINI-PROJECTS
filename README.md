@@ -16,7 +16,7 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | 8 | [Expense tracker](day-08-expense-tracker/) | Done |
 | 9 | [Personal notes](day-09-personal-notes/) | Done |
 | 10 | [Memory card game](day-10-memory-card-game/) | Done |
-| 11 | Currency converter | Coming soon |
+| 11 | [Currency converter](day-11-currency-converter/) | Done |
 | 12 | Random quote generator | Coming soon |
 | 13 | Tic-tac-toe vs computer | Coming soon |
 | 14 | Image gallery with filters | Coming soon |
