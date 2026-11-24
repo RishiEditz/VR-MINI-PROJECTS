@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Random Quote Generator</title>
+  <meta name="description" content="A random quote generator with moods, favorites saved on your device, auto play and a save-as-picture card. Plain HTML, CSS and JavaScript.">
+  <meta name="theme-color" content="#1c0638">
+  <meta property="og:title" content="Random Quote Generator">
+  <meta property="og:description" content="One tap, one fresh quote. Pick a mood, save favorites, copy, share or save a picture card.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb48a'/%3E%3Cstop offset='.5' stop-color='%23e23a8c'/%3E%3Cstop offset='1' stop-color='%23461a8f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Cpath d='M20 40c0-8 3-13 9-16M36 40c0-8 3-13 9-16' fill='none' stroke='%23fff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span><span class="blob blob--c"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <div class="head__titles">
+        <p class="eyebrow">Mini Projects &middot; Day 12</p>
+        <h1>Random Quote Generator</h1>
+      </div>
+      <div class="head__tools" role="group" aria-label="Tools">
+        <button type="button" class="btn btn--ghost btn--icon" id="favs-open" aria-label="Open favorites" title="Favorites">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+          <span class="count" id="favs-count" hidden>0</span>
+        </button>
+        <button type="button" class="btn btn--ghost btn--icon" id="theme" aria-label="Switch to light theme" title="Switch theme">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path id="theme-icon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="moods" id="moods" role="radiogroup" aria-label="Mood"></div>
+
+    <section class="stage" aria-label="Quote">
+      <article class="quote" id="quote" aria-live="polite" aria-atomic="true">
+        <span class="quote__mark" aria-hidden="true">&ldquo;</span>
+        <p class="quote__text" id="q-text">Loading a quote...</p>
+        <p class="quote__tag"><span class="dot" aria-hidden="true"></span><span id="q-tag">Mood</span><span class="quote__num" id="q-num"></span></p>
+      </article>
+      <div class="autobar" id="autobar" hidden><span id="autobar-fill"></span></div>
+    </section>
+
+    <section class="actions" aria-label="Actions">
+      <button type="button" class="btn btn--icon-text" id="prev" aria-label="Previous quote" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Back</span>
+      </button>
+      <button type="button" class="btn btn--primary" id="next">New quote</button>
+      <button type="button" class="btn btn--icon-text btn--fav" id="fav" aria-pressed="false" aria-label="Save to favorites">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path id="fav-icon" d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+        <span id="fav-label">Save</span>
+      </button>
+    </section>
+
+    <section class="tools2" aria-label="More">
+      <button type="button" class="btn btn--small" id="copy">Copy</button>
+      <button type="button" class="btn btn--small" id="share">Share</button>
+      <button type="button" class="btn btn--small" id="card">Save picture</button>
+      <button type="button" class="btn btn--small" id="auto" aria-pressed="false">Auto play: off</button>
+    </section>
+    <p class="toast" id="toast" role="status" aria-live="polite"></p>
+
+    <p class="hint">Press <kbd>Space</kbd> for the next quote, <kbd>&larr;</kbd> to go back, <kbd>F</kbd> to save.</p>
+  </main>
+
+  <aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="drawer-title">
+    <div class="drawer__panel">
+      <div class="drawer__head">
+        <h2 id="drawer-title">Favorites</h2>
+        <button type="button" class="btn btn--ghost btn--icon" id="drawer-close" aria-label="Close favorites">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <ul class="favlist" id="favlist"></ul>
+      <p class="empty" id="favs-empty">Nothing saved yet. Tap the heart on a quote you like.</p>
+      <button type="button" class="btn btn--small" id="favs-clear" hidden>Clear all</button>
+    </div>
+  </aside>
+
+  <script src="script.js"></script>
+</body>
+</html>
