@@ -18,6 +18,6 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | 10 | [Memory card game](day-10-memory-card-game/) | Done |
 | 11 | [Currency converter](day-11-currency-converter/) | Done |
 | 12 | [Random quote generator](day-12-random-quote-generator/) | Done |
-| 13 | Tic-tac-toe vs computer | Coming soon |
+| 13 | [Tic-tac-toe vs computer](day-13-tic-tac-toe/) | Done |
 | 14 | Image gallery with filters | Coming soon |
 | 15 | Pomodoro focus timer | Coming soon |
