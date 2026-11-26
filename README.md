@@ -20,4 +20,4 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | 12 | [Random quote generator](day-12-random-quote-generator/) | Done |
 | 13 | [Tic-tac-toe vs computer](day-13-tic-tac-toe/) | Done |
 | 14 | [Image gallery with filters](day-14-image-gallery/) | Done |
-| 15 | Pomodoro focus timer | Coming soon |
+| 15 | [Pomodoro focus timer](day-15-pomodoro-timer/) | Done |
