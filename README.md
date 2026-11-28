@@ -21,3 +21,4 @@ A series called "Exploring Mini Projects": one small web app per day, each in it
 | 13 | [Tic-tac-toe vs computer](day-13-tic-tac-toe/) | Done |
 | 14 | [Image gallery with filters](day-14-image-gallery/) | Done |
 | 15 | [Pomodoro focus timer](day-15-pomodoro-timer/) | Done |
+| 16 | [Color palette generator](day-16-color-palette-generator/) | Done |

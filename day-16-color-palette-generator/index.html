@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Color Palette Generator</title>
+  <meta name="description" content="Generate colour palettes with real colour harmonies, lock the ones you like, check contrast, preview them on a page, and export CSS, JSON or a PNG. Plain HTML, CSS and JavaScript.">
+  <meta name="theme-color" content="#0b0630">
+  <meta property="og:title" content="Color Palette Generator">
+  <meta property="og:description" content="Press space for a fresh palette. Lock favourites, check contrast and export in one click.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b0630'/%3E%3Crect x='8' y='14' width='10' height='36' rx='4' fill='%23ff4fa3'/%3E%3Crect x='20' y='14' width='10' height='36' rx='4' fill='%23ffd84f'/%3E%3Crect x='32' y='14' width='10' height='36' rx='4' fill='%234fe0c8'/%3E%3Crect x='44' y='14' width='10' height='36' rx='4' fill='%234f7bff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><span class="blob blob--a"></span><span class="blob blob--b"></span><span class="blob blob--c"></span></div>
+
+  <main class="app">
+    <header class="head">
+      <div class="head__titles">
+        <p class="eyebrow">Mini Projects &middot; Day 16</p>
+        <h1>Palette Generator</h1>
+      </div>
+      <div class="head__actions">
+        <button type="button" class="btn btn--ghost btn--icon" id="theme" aria-label="Switch to light theme" title="Switch theme">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path id="theme-icon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="toolbar card" aria-label="Controls">
+      <div class="chips" id="harmony" role="radiogroup" aria-label="Colour harmony">
+        <button type="button" class="chip" role="radio" data-h="random" aria-checked="true">Random</button>
+        <button type="button" class="chip" role="radio" data-h="analogous" aria-checked="false">Analogous</button>
+        <button type="button" class="chip" role="radio" data-h="complementary" aria-checked="false">Complementary</button>
+        <button type="button" class="chip" role="radio" data-h="triadic" aria-checked="false">Triadic</button>
+        <button type="button" class="chip" role="radio" data-h="split" aria-checked="false">Split</button>
+        <button type="button" class="chip" role="radio" data-h="mono" aria-checked="false">Mono</button>
+      </div>
+      <div class="toolbar__row">
+        <button type="button" class="btn btn--primary" id="gen">Generate <kbd>Space</kbd></button>
+        <div class="group">
+          <button type="button" class="btn btn--ghost" id="undo" aria-label="Undo" title="Undo (Z)">Undo</button>
+          <button type="button" class="btn btn--ghost" id="redo" aria-label="Redo" title="Redo (Shift+Z)">Redo</button>
+        </div>
+        <div class="stepper" role="group" aria-label="Number of colours">
+          <button type="button" class="btn btn--ghost btn--icon" id="less" aria-label="Fewer colours">&minus;</button>
+          <output id="count" aria-live="polite">5</output>
+          <button type="button" class="btn btn--ghost btn--icon" id="more" aria-label="More colours">+</button>
+        </div>
+        <div class="seg" id="fmt" role="radiogroup" aria-label="Colour format">
+          <button type="button" class="seg__b" role="radio" data-f="hex" aria-checked="true">HEX</button>
+          <button type="button" class="seg__b" role="radio" data-f="rgb" aria-checked="false">RGB</button>
+          <button type="button" class="seg__b" role="radio" data-f="hsl" aria-checked="false">HSL</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="palette" id="palette" aria-label="Palette"></section>
+    <p class="hint">Tap a colour to copy it. Lock the ones you love, then generate again.</p>
+
+    <div class="layout">
+      <section class="card preview" aria-label="Preview">
+        <h2>Live preview</h2>
+        <div class="mock" id="mock">
+          <div class="mock__bar"><span class="mock__logo">Brand</span><span class="mock__nav">Home &middot; Work &middot; About</span></div>
+          <div class="mock__body">
+            <h3 class="mock__title">Your colours at work</h3>
+            <p class="mock__text">The lightest colour becomes the page, the darkest becomes the text, and the boldest becomes the button.</p>
+            <div class="mock__row"><span class="mock__btn">Get started</span><span class="mock__btn mock__btn--alt">Learn more</span></div>
+          </div>
+        </div>
+        <p class="mock__ratio" id="ratio" aria-live="polite"></p>
+      </section>
+
+      <section class="card export" aria-label="Export and save">
+        <h2>Save and export</h2>
+        <div class="export__grid">
+          <button type="button" class="btn btn--primary" id="save">Save palette</button>
+          <button type="button" class="btn" id="css">Copy CSS</button>
+          <button type="button" class="btn" id="json">Copy JSON</button>
+          <button type="button" class="btn" id="png">Download PNG</button>
+          <button type="button" class="btn" id="link">Copy share link</button>
+        </div>
+        <pre class="code" id="code" aria-label="CSS preview"></pre>
+      </section>
+    </div>
+
+    <section class="card saved" aria-label="Saved palettes">
+      <div class="saved__head"><h2>Saved palettes</h2><button type="button" class="btn btn--ghost btn--small" id="clear">Clear all</button></div>
+      <ul class="saved__list" id="saved"></ul>
+      <p class="saved__empty" id="empty">Nothing saved yet. Press Save palette to keep one on this device.</p>
+    </section>
+
+    <footer class="foot"><p>Shortcuts: Space new palette &middot; Z undo &middot; Shift+Z redo &middot; 1 to 7 lock a colour</p></footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
